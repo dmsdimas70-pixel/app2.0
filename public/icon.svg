@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="128" fill="#4f46e5"/>
+  <g transform="translate(64, 64) scale(0.75)" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- Sofa / Furniture Icon -->
+    <path d="M 60 260 L 60 160 C 60 130 84 106 114 106 L 398 106 C 428 106 452 130 452 160 L 452 260" fill="none" />
+    <path d="M 40 260 C 40 240 56 224 76 224 L 88 224 C 108 224 124 240 124 260 L 124 340 C 124 360 108 376 88 376 L 76 376 C 56 376 40 360 40 340 Z" fill="#ffffff" fill-opacity="0.2" />
+    <path d="M 388 260 C 388 240 404 224 424 224 L 436 224 C 456 224 472 240 472 260 L 472 340 C 472 360 456 376 436 376 L 424 376 C 404 376 388 360 388 340 Z" fill="#ffffff" fill-opacity="0.2" />
+    <rect x="124" y="270" width="264" height="106" rx="20" fill="#ffffff" fill-opacity="0.15" />
+    <line x1="256" y1="270" x2="256" y2="376" />
+    <line x1="82" y1="376" x2="82" y2="416" />
+    <line x1="430" y1="376" x2="430" y2="416" />
+    <!-- Chart trend line symbolizing conversion -->
+    <polyline points="150,220 220,180 290,210 360,150" stroke="#a5b4fc" stroke-width="20" />
+    <circle cx="360" cy="150" r="14" fill="#38bdf8" />
+  </g>
+</svg>

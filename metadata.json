@@ -1,0 +1,6 @@
+{
+  "name": "Monitor de Atendimentos e Vendas - Loja de Móveis",
+  "description": "Aplicativo portátil para controle e monitoramento diário da chegada e conversão de clientes em lojas de móveis, com análise de campanhas, produtos, origens e faturamento.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
