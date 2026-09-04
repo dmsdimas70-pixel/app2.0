@@ -464,6 +464,57 @@ export const BackupSecurityView: React.FC<BackupSecurityViewProps> = ({
         )}
       </div>
 
+      {/* MODO EXECUTÁVEL PORTÁTIL (JAVA .JAR / WINDOWS) */}
+      <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-xs space-y-4">
+        <div className="flex items-start justify-between flex-wrap gap-2">
+          <div>
+            <h3 className="font-bold text-slate-800 text-sm flex items-center gap-2">
+              <HardDrive className="w-4 h-4 text-indigo-600" />
+              <span>Executável Portátil (Java .JAR / Windows .BAT / .EXE)</span>
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Inicie o programa diretamente em qualquer computador sem precisar instalar ferramentas de desenvolvimento.
+            </p>
+          </div>
+          <span className="px-2.5 py-1 bg-emerald-50 text-emerald-700 text-[11px] font-bold rounded-lg border border-emerald-200 flex items-center gap-1">
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            <span>Executável Pronto: MonitorLoja.jar</span>
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center">1</span>
+              <span className="font-bold text-xs text-slate-800">MonitorLoja.jar (Java)</span>
+            </div>
+            <p className="text-[11px] text-slate-600 leading-relaxed">
+              Arquivo executável em Java de 380 KB com servidor HTTP local embutido. Basta dar um <strong>duplo clique</strong> para rodar e abrir o navegador automaticamente.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center">2</span>
+              <span className="font-bold text-xs text-slate-800">INICIAR_NO_WINDOWS.bat</span>
+            </div>
+            <p className="text-[11px] text-slate-600 leading-relaxed">
+              Detecta se o Java existe. Se não tiver Java instalado, abre instantaneamente em <strong>Modo App no Edge</strong> sem instalar absolutamente nada!
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-indigo-100 text-indigo-700 font-bold text-xs flex items-center justify-center">3</span>
+              <span className="font-bold text-xs text-slate-800">Atalho na Área de Trabalho</span>
+            </div>
+            <p className="text-[11px] text-slate-600 leading-relaxed">
+              Dê um duplo clique no arquivo <strong>Criar_Atalho_Area_de_Trabalho.bat</strong> para gerar o ícone na sua Área de Trabalho com 1 toque.
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* INSTRUÇÕES TÉCNICAS E ARQUITETURA OFFLINE */}
       <div className="bg-slate-900 text-slate-300 rounded-2xl p-6 text-xs space-y-3">
         <h3 className="font-bold text-white text-sm flex items-center gap-2">

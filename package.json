@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite --port=3000 --host=0.0.0.0",
     "build": "vite build",
+    "build:jar": "vite build && mkdir -p /tmp/launcher-build && javac -d /tmp/launcher-build launcher/MonitorLojaLauncher.java && cp -r dist /tmp/launcher-build/ && jar cfe MonitorLoja.jar com.moveis.launcher.MonitorLojaLauncher -C /tmp/launcher-build .",
     "preview": "vite preview",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit"

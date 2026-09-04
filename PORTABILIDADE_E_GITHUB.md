@@ -1,82 +1,91 @@
-# Guia de Portabilidade, Instalação no Windows e GitHub
+# Guia de Portabilidade, Executável Java (.jar), Windows e GitHub
 
-Este aplicativo foi desenvolvido para atender com excelência aos requisitos de **funcionamento 100% offline**, **portabilidade em qualquer computador Windows sem ferramentas de programação**, **segurança contra perda de dados** e **fácil publicação no GitHub**.
-
----
-
-## 1. Como Usar no Windows Sem Instalar Node.js ou Python
-
-Existem duas formas ultra-simples para o usuário final abrir o sistema diretamente:
-
-### Método A: Instalação com 1 Clique (PWA Portátil - Recomendado)
-1. Abra o aplicativo no **Google Chrome** ou **Microsoft Edge** (já vem instalado em qualquer Windows).
-2. Clique no botão **"Instalar App no PC"** na barra superior do sistema (ou no ícone de computador/instalação na barra de endereços do navegador).
-3. Pronto! Um atalho oficial será adicionado à sua **Área de Trabalho** e ao **Menu Iniciar** do Windows.
-4. Ao clicar no ícone, ele abre em uma janela própria de aplicativo independente (sem barra de navegação), funcionando exatamente como um executável tradicional (`.exe`) e **100% offline**, sem precisar de conexão com a internet.
-
-### Método B: Arquivo Executável em Lote (`INICIAR_NO_WINDOWS.bat`)
-- Foi incluído o arquivo `INICIAR_NO_WINDOWS.bat` na raiz do projeto.
-- Dê um duplo clique nele para abrir o sistema diretamente em modo aplicativo nativo no Edge ou Chrome.
+Este aplicativo foi desenvolvido para atender com excelência aos requisitos de **funcionamento 100% offline**, **iniciar facilmente com arquivo executável tipo EXE/Java sem precisar instalar nada**, **segurança contra perda de dados** e **fácil publicação no GitHub**.
 
 ---
 
-## 2. Estrutura de Pastas para Enviar ao GitHub
+## 1. Como Iniciar no Windows (Sem Precisar Instalar Nada)
 
-Ao transferir o projeto para o seu GitHub, a organização é limpa e padronizada:
+Você tem 4 opções extremamente simples para inicializar o programa em qualquer computador:
+
+### Opção 1: Executável Java (`MonitorLoja.jar`) - O Mais Completo
+- **O que é**: Um arquivo JAR auto-contido de apenas ~380 KB que já traz todo o aplicativo compilado e um servidor HTTP local de alta performance embutido (desenvolvido em Java padrão com zero dependências externas).
+- **Como usar**:
+  - Dê **duplo clique** no arquivo `MonitorLoja.jar`.
+  - Ou clique com o botão direito e selecione **"Abrir com Java"**.
+  - O aplicativo inicia o servidor local e abre automaticamente o navegador no modo aplicativo.
+  - Uma janela compacta de controle em Java permite reabrir no navegador ou encerrar o programa a qualquer momento.
+
+### Opção 2: Inicializador Inteligente (`INICIAR_NO_WINDOWS.bat`)
+- Dê **duplo clique** no arquivo `INICIAR_NO_WINDOWS.bat`.
+- O script detecta automaticamente se o Java está instalado:
+  1. Se tiver Java: executa diretamente o `MonitorLoja.jar` em segundo plano com `javaw` (sem tela preta de terminal).
+  2. Se **NÃO** tiver Java: inicializa instantaneamente em **Modo Aplicativo Nativo** usando o Microsoft Edge (`msedge --app`), que já vem pré-instalado em 100% dos computadores Windows 10 e 11.
+  - **Resultado**: Abre como um programa `.exe` normal, sem barra de navegação, 100% offline e sem precisar instalar absolutamente nada!
+
+### Opção 3: Executável Silencioso sem Prompt (`MonitorLoja.vbs`)
+- Dê **duplo clique** no arquivo `MonitorLoja.vbs`.
+- Executa o aplicativo de forma silenciosa, sem abrir janelas pretas de prompt de comando do Windows.
+
+### Opção 4: Instalar como Aplicativo Nativo no Windows (PWA com 1 Clique)
+- Ao abrir o aplicativo, clique no botão **"Instalar App no PC"** na barra superior (ou no ícone de instalação na barra de endereços do Chrome/Edge).
+- Um atalho oficial será criado na sua **Área de Trabalho** e no **Menu Iniciar** do Windows, funcionando exatamente como um programa `.exe`.
+
+---
+
+## 2. Criar Atalho na Área de Trabalho
+
+Para que as vendedoras abram o programa direto da Área de Trabalho:
+1. Dê um duplo clique no arquivo `Criar_Atalho_Area_de_Trabalho.bat`.
+2. Um atalho intitulado **"Monitor de Atendimentos"** será criado instantaneamente na sua Área de Trabalho.
+
+---
+
+## 3. Como Transformar o JAR em um Arquivo `.exe` Físico (Opcional)
+
+Se você preferir um arquivo estritamente com a extensão `.exe`:
+- O arquivo `MonitorLoja.jar` pode ser transformado diretamente em `.exe` através de ferramentas gratuitas como:
+  - **Launch4j** (Gera `.exe` leve encapsulando o `.jar` com ícone personalizado).
+  - **Inno Setup** (Gera instalador executável `.exe` completo para Windows).
+  - **IExpress** (Nativo do próprio Windows: pressione `Win + R`, digite `iexpress` e crie um pacote executável apontando para `INICIAR_NO_WINDOWS.bat`).
+
+---
+
+## 4. Estrutura de Arquivos para o GitHub
+
+O repositório já está pronto para publicação no GitHub:
 
 ```text
-├── public/                     # Ícones PWA, logos e manifest
-│   ├── icon.svg
-│   ├── pwa-192x192.png
-│   ├── pwa-512x512.png
-│   └── pwa-maskable-512x512.png
-├── src/                        # Código fonte do sistema
+├── MonitorLoja.jar             # Executável Java portátil (servidor + web app embutido)
+├── INICIAR_NO_WINDOWS.bat      # Inicializador universal com auto-detecção de Java
+├── INICIAR_COM_JAVA.bat        # Inicializador direto para Java
+├── MonitorLoja.vbs             # Inicializador silencioso sem janela preta
+├── Criar_Atalho_Area_de_Trabalho.bat # Cria atalho na Área de Trabalho do Windows
+├── launcher/                   # Código-fonte do Launcher Java
+│   └── MonitorLojaLauncher.java
+├── dist/                       # Arquivos estáticos compilados (HTML/CSS/JS)
+├── public/                     # Ícones, manifest e assets do PWA
+├── src/                        # Código-fonte React/TypeScript do sistema
 │   ├── components/             # Telas e modais modulares
-│   │   ├── BackupSecurityView.tsx  # Área de Backup e Segurança
-│   │   ├── CatalogView.tsx         # Gestão de Campanhas, Produtos e Origens
-│   │   ├── HistoryView.tsx         # Pesquisa e Filtros de Histórico
-│   │   ├── DailyView.tsx           # Visão Diária da Vendedora
-│   │   ├── DashboardView.tsx       # Gráficos e Indicadores Consolidados
-│   │   ├── ReportsView.tsx         # Relatórios e Exportação CSV/Impressão
-│   │   ├── AutomatedAnalysisView.tsx # Diagnóstico Inteligente & Comparativo
-│   │   ├── InteractionModal.tsx    # Modal de Cadastro/Edição
-│   │   ├── DeleteConfirmModal.tsx  # Confirmação de Exclusão Definitiva
-│   │   ├── QuickStatusModal.tsx    # Mudança Rápida de Status
-│   │   └── PWAInstallButton.tsx    # Botão de Instalação no Windows
-│   ├── hooks/                  # Hooks PWA e Status Offline
-│   │   ├── usePWAInstall.ts
-│   │   └── useOnlineStatus.ts
-│   ├── types.ts                # Definições de Tipos TypeScript
-│   ├── utils/
-│   │   ├── storage.ts          # Banco de Dados Local (IndexedDB + Mirror)
-│   │   ├── defaults.ts         # Itens padrão de campanhas e origens
-│   │   └── analytics.ts        # Cálculo de conversão e ticket médio
-│   ├── App.tsx                 # Ponto de entrada do sistema
-│   └── main.tsx
-├── INICIAR_NO_WINDOWS.bat      # Arquivo para inicialização rápida no Windows
-├── vite.config.ts              # Configuração Vite e Service Worker PWA
+│   ├── utils/                  # Banco IndexedDB e lógica de negócio
+│   └── types.ts                # Definições de tipos
 ├── package.json
 └── README.md
 ```
 
 ### Como Subir para o GitHub:
 ```bash
-git init
 git add .
-git commit -m "Versão portátil completa do Monitor de Atendimentos e Vendas"
-git branch -M main
-git remote add origin https://github.com/SEU_USUARIO/SEU_REPOSITORIO.git
-git push -u origin main
+git commit -m "Adiciona launcher executável Java (.jar) e scripts para Windows sem instalação"
+git push origin main
 ```
 
 ---
 
-## 3. Segurança e Persistência dos Dados (Sem Perda de Informações)
+## 5. Como Recompilar o Executável Java
 
-- **Dual-Storage (IndexedDB + LocalStorage)**: Qualquer atendimento salvo, editado ou excluído é gravado simultaneamente no banco transacional IndexedDB e no armazenamento local síncrono.
-- **Proteção contra quedas**: Se o computador for reiniciado ou o programa for fechado repentinamente, nenhuma informação é perdida.
-- **Área de Backup e Segurança**:
-  - **Backup Manual**: 1-clique para gerar e baixar um arquivo `.json` carimbado com data e hora.
-  - **Snapshots Automáticos**: O sistema salva internamente snapshots a cada 30 minutos e a cada alteração crítica, permitindo restauração imediata.
-  - **Restauração Segura**: Suporte a *Substituir Tudo* ou *Mesclar Dados* (para somar atendimentos sem duplicar registros).
-- **Regra 21 (Preservação Histórica)**: Campanhas, produtos ou origens desativadas na aba de Cadastros continuam perfeitamente visíveis em todos os relatórios e atendimentos do passado.
+Se fizer alterações no código React do sistema, para atualizar o arquivo `MonitorLoja.jar`:
+```bash
+npm run build:jar
+```
+Esse comando compila o projeto web com o Vite, compila a classe Java `MonitorLojaLauncher.java` e empacota tudo novamente dentro do `MonitorLoja.jar`.
