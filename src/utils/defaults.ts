@@ -1,4 +1,4 @@
-import { AppSettings, CustomerStatus, CatalogItem } from '../types';
+import { AppSettings, CustomerStatus, CatalogItem, CategoryItem, ProductItem } from '../types';
 
 export const DEFAULT_ORIGINS: string[] = [
   'Instagram',
@@ -47,6 +47,31 @@ export const DEFAULT_SELLERS: string[] = [
   'Patrícia Design',
 ];
 
+export const DEFAULT_CATEGORIES: CategoryItem[] = [
+  { id: 'cat-sofas', name: 'Sofás & Estofados', active: true },
+  { id: 'cat-quartos', name: 'Quartos & Roupeiros', active: true },
+  { id: 'cat-cozinhas', name: 'Cozinhas & Modulados', active: true },
+  { id: 'cat-mesas', name: 'Mesas & Cadeiras', active: true },
+  { id: 'cat-salas', name: 'Salas & Painéis', active: true },
+  { id: 'cat-colchoes', name: 'Colchões & Camas', active: true },
+  { id: 'cat-decor', name: 'Poltronas & Decoração', active: true },
+];
+
+export const DEFAULT_DETAILED_PRODUCTS: ProductItem[] = [
+  { id: 'prod-1', name: 'Sofá Imperial 3 Lugares', category: 'Sofás & Estofados', brand: 'Estofados Real', active: true, notes: 'Tecido linho rústico, pés de madeira' },
+  { id: 'prod-2', name: 'Guarda-Roupa Montreal 6 Portas', category: 'Quartos & Roupeiros', brand: 'Móveis Sul', active: true, notes: '100% MDF com espelho central' },
+  { id: 'prod-3', name: 'Cozinha Florença 7 Peças', category: 'Cozinhas & Modulados', brand: 'Itatiaia Premium', active: true, notes: 'Amortecimento slow motion' },
+  { id: 'prod-4', name: 'Mesa Luna 6 Cadeiras', category: 'Mesas & Cadeiras', brand: 'Kappesberg', active: true, notes: 'Tampo de vidro temperado e laca' },
+  { id: 'prod-5', name: 'Painel Elegance com LED', category: 'Salas & Painéis', brand: 'DJ Móveis', active: true, notes: 'Suporta TV até 75 polegadas' },
+  { id: 'prod-6', name: 'Sofá Retrátil Madri 2.50m', category: 'Sofás & Estofados', brand: 'Estofados Real', active: true, notes: 'Molas ensacadas e veludo suede' },
+  { id: 'prod-7', name: 'Roupeiro Sevilha Casal', category: 'Quartos & Roupeiros', brand: 'Móveis Sul', active: true, notes: 'Portas de correr com trilho de alumínio' },
+  { id: 'prod-8', name: 'Cozinha Modulada Lisboa', category: 'Cozinhas & Modulados', brand: 'Casttini', active: true, notes: 'Puxadores em perfil gola' },
+  { id: 'prod-9', name: 'Mesa Veneza 8 Lugares', category: 'Mesas & Cadeiras', brand: 'Kappesberg', active: true, notes: 'Base em madeira maciça' },
+  { id: 'prod-10', name: 'Cama Box Queen Atenas', category: 'Colchões & Camas', brand: 'Castor', active: true, notes: 'Molas Pocket e pillow top' },
+  { id: 'prod-11', name: 'Colchão Ortopédico Titanium', category: 'Colchões & Camas', brand: 'Ortobom', active: true, notes: 'Espuma D45 certificada' },
+  { id: 'prod-12', name: 'Poltrona Reclinável Roma', category: 'Poltronas & Decoração', brand: 'Herval', active: true, notes: 'Couro ecológico e mecanismo zero wall' },
+];
+
 export function stringsToCatalog(items: string[]): CatalogItem[] {
   return items.map((name, idx) => ({
     id: `cat-${idx}-${name.toLowerCase().replace(/\s+/g, '-')}`,
@@ -57,13 +82,17 @@ export function stringsToCatalog(items: string[]): CatalogItem[] {
 
 export const DEFAULT_SETTINGS: AppSettings = {
   storeName: 'MÓVEIS PREMIUM',
+  userRole: 'administrador',
+  activeSeller: 'Camila Vendas',
   origins: DEFAULT_ORIGINS,
   campaigns: DEFAULT_CAMPAIGNS,
-  products: DEFAULT_PRODUCTS,
+  products: DEFAULT_DETAILED_PRODUCTS.map((p) => p.name),
   sellers: DEFAULT_SELLERS,
+  categories: DEFAULT_CATEGORIES.map((c) => c.name),
   catalogOrigins: stringsToCatalog(DEFAULT_ORIGINS),
   catalogCampaigns: stringsToCatalog(DEFAULT_CAMPAIGNS),
-  catalogProducts: stringsToCatalog(DEFAULT_PRODUCTS),
+  catalogProducts: DEFAULT_DETAILED_PRODUCTS,
+  catalogCategories: DEFAULT_CATEGORIES,
   catalogSellers: stringsToCatalog(DEFAULT_SELLERS),
   autoBackupEnabled: true,
   lastBackupDate: new Date().toISOString(),

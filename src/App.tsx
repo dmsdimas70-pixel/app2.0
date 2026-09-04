@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CustomerInteraction, CustomerStatus, AppSettings } from './types';
+import { CustomerInteraction, CustomerStatus, AppSettings, UserRole } from './types';
 import {
   getStoredInteractions,
   saveStoredInteractions,
@@ -20,6 +20,10 @@ import { HistoryView } from './components/HistoryView';
 import { DashboardView } from './components/DashboardView';
 import { ReportsView } from './components/ReportsView';
 import { CatalogView } from './components/CatalogView';
+import { ProductsView } from './components/ProductsView';
+import { CampaignsView } from './components/CampaignsView';
+import { CategoriesView } from './components/CategoriesView';
+import { OriginsView } from './components/OriginsView';
 import { BackupSecurityView } from './components/BackupSecurityView';
 import { AutomatedAnalysisView } from './components/AutomatedAnalysisView';
 import { InteractionModal } from './components/InteractionModal';
@@ -195,6 +199,20 @@ export default function App() {
     }
   };
 
+  const handleToggleUserRole = () => {
+    const nextRole: UserRole = settings.userRole === 'administrador' ? 'vendedora' : 'administrador';
+    const updated: AppSettings = { ...settings, userRole: nextRole };
+    setSettings(updated);
+    saveStoredSettings(updated);
+    showToast(`Perfil alterado para: ${nextRole.toUpperCase()}`);
+    if (nextRole === 'vendedora') {
+      const adminTabs: ActiveTab[] = ['reports', 'campaigns', 'products', 'categories', 'origins', 'backup', 'settings', 'analysis'];
+      if (adminTabs.includes(activeTab)) {
+        setActiveTab('daily');
+      }
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-[#F1F5F9] text-[#1E293B] font-sans selection:bg-indigo-100 selection:text-indigo-900">
       {/* Offline Status Badge */}
@@ -206,6 +224,8 @@ export default function App() {
         setActiveTab={setActiveTab}
         storeName={settings.storeName}
         currentDate={selectedDate}
+        userRole={settings.userRole || 'administrador'}
+        onToggleUserRole={handleToggleUserRole}
         onOpenSettings={() => setIsSettingsOpen(true)}
         onNewInteraction={() => {
           setEditingItem(null);
@@ -215,7 +235,10 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        {/* Tab 1: Atendimentos do Dia */}
+        {/* Tab 1: Dashboard Geral (Seção 2) */}
+        {activeTab === 'dashboard' && <DashboardView interactions={interactions} />}
+
+        {/* Tab 2: Atendimentos do Dia (Seções 3, 4, 10) */}
         {activeTab === 'daily' && (
           <DailyView
             selectedDate={selectedDate}
@@ -240,7 +263,7 @@ export default function App() {
           />
         )}
 
-        {/* Tab 2: Histórico */}
+        {/* Tab 3: Histórico Completo com Filtros (Seção 15) */}
         {activeTab === 'history' && (
           <HistoryView
             interactions={interactions}
@@ -257,24 +280,48 @@ export default function App() {
           />
         )}
 
-        {/* Tab 3: Dashboard */}
-        {activeTab === 'dashboard' && <DashboardView interactions={interactions} />}
-
-        {/* Tab 4: Relatórios */}
+        {/* Tab 4: Relatórios Estatísticos e Exportação (Seção 11) */}
         {activeTab === 'reports' && (
           <ReportsView interactions={interactions} storeName={settings.storeName} />
         )}
 
-        {/* Tab 5: Cadastros */}
-        {activeTab === 'catalog' && (
-          <CatalogView
+        {/* Tab 5: Campanhas Promocionais (Seção 6) */}
+        {activeTab === 'campaigns' && (
+          <CampaignsView
             settings={settings}
             onSaveSettings={handleSaveSettings}
             onNotify={showToast}
           />
         )}
 
-        {/* Tab 6: Backup e Segurança */}
+        {/* Tab 6: Produtos / Móveis (Seção 7) */}
+        {activeTab === 'products' && (
+          <ProductsView
+            settings={settings}
+            onSaveSettings={handleSaveSettings}
+            onNotify={showToast}
+          />
+        )}
+
+        {/* Tab 7: Categorias de Móveis (Seção 7) */}
+        {activeTab === 'categories' && (
+          <CategoriesView
+            settings={settings}
+            onSaveSettings={handleSaveSettings}
+            onNotify={showToast}
+          />
+        )}
+
+        {/* Tab 8: Origens de Clientes (Seção 5) */}
+        {activeTab === 'origins' && (
+          <OriginsView
+            settings={settings}
+            onSaveSettings={handleSaveSettings}
+            onNotify={showToast}
+          />
+        )}
+
+        {/* Tab 9: Backup & Segurança Local (Seções 1, 16) */}
         {activeTab === 'backup' && (
           <BackupSecurityView
             interactions={interactions}
@@ -284,7 +331,7 @@ export default function App() {
           />
         )}
 
-        {/* Tab 7: Análise Inteligente e Comparativo */}
+        {/* Tab 10: Análise Automática Inteligente & Comparativo (Seções 12, 13, 14) */}
         {activeTab === 'analysis' && <AutomatedAnalysisView interactions={interactions} />}
       </main>
 

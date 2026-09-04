@@ -7,6 +7,7 @@ import {
   getLastBackupTimestamp,
   createLocalSnapshot,
 } from '../utils/storage';
+import { downloadSQLiteDump } from '../utils/sqliteExport';
 import {
   ShieldCheck,
   Download,
@@ -276,16 +277,29 @@ export const BackupSecurityView: React.FC<BackupSecurityViewProps> = ({
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100">
+          <div className="pt-4 border-t border-slate-100 space-y-2">
             <button
               type="button"
               id="btn-generate-manual-backup"
               onClick={handleManualBackup}
               disabled={isProcessing}
-              className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow-sm flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+              className="w-full py-2.5 px-4 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl text-xs font-bold shadow-xs flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
             >
               <Download className="w-4 h-4" />
-              <span>Baixar Arquivo de Backup Agora (.json)</span>
+              <span>Baixar Arquivo de Backup Completo (.json)</span>
+            </button>
+
+            <button
+              type="button"
+              id="btn-export-sqlite-sql"
+              onClick={() => {
+                downloadSQLiteDump(interactions, settings);
+                onNotify('Script DDL/DML SQLite (.sql) exportado com sucesso!');
+              }}
+              className="w-full py-2.5 px-4 bg-slate-800 hover:bg-slate-900 active:bg-black text-white rounded-xl text-xs font-bold shadow-xs flex items-center justify-center gap-2 transition-colors"
+            >
+              <Database className="w-4 h-4 text-emerald-400" />
+              <span>Exportar Banco de Dados SQLite (.sql)</span>
             </button>
           </div>
         </div>

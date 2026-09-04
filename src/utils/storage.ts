@@ -85,11 +85,30 @@ function normalizeSettings(loaded: Partial<AppSettings>): AppSettings {
   if (!base.catalogCampaigns || base.catalogCampaigns.length === 0) {
     base.catalogCampaigns = stringsToCatalog(base.campaigns || DEFAULT_SETTINGS.campaigns);
   }
+  if (!base.catalogCategories || base.catalogCategories.length === 0) {
+    base.catalogCategories = DEFAULT_SETTINGS.catalogCategories || [];
+  }
   if (!base.catalogProducts || base.catalogProducts.length === 0) {
-    base.catalogProducts = stringsToCatalog(base.products || DEFAULT_SETTINGS.products);
+    base.catalogProducts = DEFAULT_SETTINGS.catalogProducts || [];
+  } else {
+    // Ensure each product has category
+    base.catalogProducts = base.catalogProducts.map((p) => ({
+      id: p.id,
+      name: p.name,
+      category: (p as any).category || 'Móveis Gerais',
+      brand: (p as any).brand || '',
+      active: p.active !== undefined ? p.active : true,
+      notes: (p as any).notes || '',
+    }));
   }
   if (!base.catalogSellers || base.catalogSellers.length === 0) {
     base.catalogSellers = stringsToCatalog(base.sellers || DEFAULT_SETTINGS.sellers);
+  }
+  if (!base.userRole) {
+    base.userRole = 'administrador';
+  }
+  if (!base.activeSeller) {
+    base.activeSeller = base.sellers[0] || 'Camila Vendas';
   }
   return base as AppSettings;
 }

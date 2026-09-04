@@ -8,23 +8,36 @@ import {
   ShieldCheck,
   Sparkles,
   Settings,
+  Tag,
+  FolderTree,
+  Compass,
+  UserCheck,
+  ShieldAlert,
+  Plus,
 } from 'lucide-react';
+import { UserRole } from '../types';
 import { PWAInstallButton } from './PWAInstallButton';
 
 export type ActiveTab =
+  | 'dashboard'
   | 'daily'
   | 'history'
-  | 'dashboard'
   | 'reports'
-  | 'catalog'
+  | 'campaigns'
+  | 'products'
+  | 'categories'
+  | 'origins'
   | 'backup'
-  | 'analysis';
+  | 'analysis'
+  | 'settings';
 
 interface NavbarProps {
   activeTab: ActiveTab;
   setActiveTab: (tab: ActiveTab) => void;
   storeName: string;
   currentDate: string;
+  userRole: UserRole;
+  onToggleUserRole: () => void;
   onOpenSettings: () => void;
   onNewInteraction: () => void;
 }
@@ -34,6 +47,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   setActiveTab,
   storeName,
   currentDate,
+  userRole,
+  onToggleUserRole,
   onOpenSettings,
   onNewInteraction,
 }) => {
@@ -53,24 +68,37 @@ export const Navbar: React.FC<NavbarProps> = ({
     return `${weekday}, ${parts[2]}/${parts[1]}/${parts[0]}`;
   };
 
-  const navItems: { id: ActiveTab; label: string; icon: React.FC<{ className?: string }> }[] = [
-    { id: 'daily', label: 'Atendimentos do Dia', icon: CalendarDays },
-    { id: 'history', label: 'Histórico', icon: History },
+  const isAdmin = userRole === 'administrador';
+
+  // Section 20 menu items
+  const allNavItems: {
+    id: ActiveTab;
+    label: string;
+    icon: React.FC<{ className?: string }>;
+    adminOnly?: boolean;
+  }[] = [
     { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'reports', label: 'Relatórios', icon: FileSpreadsheet },
-    { id: 'catalog', label: 'Cadastros', icon: Layers },
-    { id: 'backup', label: 'Backup & Segurança', icon: ShieldCheck },
-    { id: 'analysis', label: 'Análise & Comparativo', icon: Sparkles },
+    { id: 'daily', label: 'Atendimentos', icon: CalendarDays },
+    { id: 'history', label: 'Histórico', icon: History },
+    { id: 'reports', label: 'Relatórios', icon: FileSpreadsheet, adminOnly: true },
+    { id: 'campaigns', label: 'Campanhas', icon: Tag, adminOnly: true },
+    { id: 'products', label: 'Produtos / Móveis', icon: Layers, adminOnly: true },
+    { id: 'categories', label: 'Categorias', icon: FolderTree, adminOnly: true },
+    { id: 'origins', label: 'Origens', icon: Compass, adminOnly: true },
+    { id: 'backup', label: 'Backup', icon: ShieldCheck, adminOnly: true },
+    { id: 'analysis', label: 'Análise Automática', icon: Sparkles, adminOnly: true },
   ];
+
+  const visibleNavItems = allNavItems.filter((item) => !item.adminOnly || isAdmin);
 
   return (
     <header className="print:hidden sticky top-0 z-30 shadow-sm">
-      {/* Top Main Dark Slate Bar (#0F172A with #334155 border) */}
+      {/* Top Main Dark Slate Bar */}
       <div className="bg-[#0F172A] text-white border-b border-[#334155]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Brand */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <div>
                 <h1 className="text-base sm:text-lg font-bold tracking-tight text-indigo-400 leading-tight">
                   {storeName.toUpperCase().includes('MÓVEIS') ? (
@@ -89,9 +117,9 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             </div>
 
-            {/* Nav Tabs (Desktop) */}
-            <nav className="hidden lg:flex items-center space-x-1">
-              {navItems.map((item) => {
+            {/* Nav Tabs (Desktop Scrollable / Flex) */}
+            <nav className="hidden xl:flex items-center space-x-1">
+              {visibleNavItems.map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
                 return (
@@ -99,10 +127,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                     key={item.id}
                     id={`nav-tab-${item.id}`}
                     onClick={() => setActiveTab(item.id)}
-                    className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-all ${
+                    className={`flex items-center space-x-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                       isActive
-                        ? 'bg-indigo-600/20 text-indigo-300 border-l-2 border-indigo-500 shadow-xs font-bold'
-                        : 'text-slate-300 opacity-70 hover:opacity-100 hover:bg-slate-800/80 cursor-pointer'
+                        ? 'bg-indigo-600/30 text-indigo-300 font-bold shadow-xs'
+                        : 'text-slate-300 opacity-80 hover:opacity-100 hover:bg-slate-800/80 cursor-pointer'
                     }`}
                   >
                     <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-indigo-400' : 'text-slate-400'}`} />
@@ -112,25 +140,49 @@ export const Navbar: React.FC<NavbarProps> = ({
               })}
             </nav>
 
-            {/* Right Tools: PWA Install Button, Settings */}
-            <div className="flex items-center space-x-2.5">
+            {/* Right Tools: Role Badge / Switcher, PWA Install, Settings */}
+            <div className="flex items-center space-x-2">
+              {/* Role Toggle Button (Seção 21) */}
+              <button
+                id="btn-toggle-role"
+                onClick={onToggleUserRole}
+                title={`Perfil atual: ${userRole}. Clique para alternar perfil.`}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-bold transition-all border ${
+                  isAdmin
+                    ? 'bg-amber-950/40 text-amber-300 border-amber-800/60 hover:bg-amber-900/50'
+                    : 'bg-emerald-950/40 text-emerald-300 border-emerald-800/60 hover:bg-emerald-900/50'
+                }`}
+              >
+                {isAdmin ? (
+                  <ShieldAlert className="w-3.5 h-3.5 text-amber-400" />
+                ) : (
+                  <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+                )}
+                <span className="capitalize">{userRole}</span>
+                <span className="text-[10px] text-slate-400 font-normal underline ml-0.5">
+                  (mudar)
+                </span>
+              </button>
+
               <PWAInstallButton />
 
-              <button
-                id="btn-open-settings"
-                onClick={onOpenSettings}
-                title="Configurações Gerais da Loja"
-                className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
-              >
-                <Settings className="w-4 h-4" />
-              </button>
+              {isAdmin && (
+                <button
+                  id="btn-open-settings"
+                  onClick={onOpenSettings}
+                  title="Configurações Gerais da Loja"
+                  className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                >
+                  <Settings className="w-4 h-4" />
+                </button>
+              )}
             </div>
           </div>
         </div>
 
-        {/* Mobile / Tablet Navigation Tabs */}
-        <div className="lg:hidden flex space-x-1 px-4 py-2 overflow-x-auto scrollbar-none border-t border-[#334155] bg-[#0F172A]/95">
-          {navItems.map((item) => {
+        {/* Secondary Navigation bar on medium / smaller screens */}
+        <div className="xl:hidden flex space-x-1 px-4 py-2 overflow-x-auto scrollbar-none border-t border-[#334155] bg-[#0F172A]/95">
+          {visibleNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeTab === item.id;
             return (
@@ -139,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => setActiveTab(item.id)}
                 className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs whitespace-nowrap ${
                   isActive
-                    ? 'bg-indigo-600/20 text-indigo-300 font-bold border-l-2 border-indigo-500'
+                    ? 'bg-indigo-600/30 text-indigo-300 font-bold'
                     : 'text-slate-400 hover:text-white'
                 }`}
               >
@@ -154,10 +206,13 @@ export const Navbar: React.FC<NavbarProps> = ({
       {/* Sub Header (White bar with metadata and quick action button) */}
       <div className="h-14 bg-white border-b border-slate-200 flex items-center justify-between px-4 sm:px-6 lg:px-8 shadow-2xs">
         <div className="flex items-center space-x-2 sm:space-x-4 text-xs">
-          <span className="font-semibold text-slate-600">Fluxo e Conversão de Loja</span>
-          <span className="h-3.5 w-[1px] bg-slate-300 hidden xs:inline-block"></span>
+          <span className="font-semibold text-slate-600 hidden sm:inline">Loja de Móveis</span>
+          <span className="h-3.5 w-[1px] bg-slate-300 hidden sm:inline-block"></span>
           <span className="font-bold text-slate-800 uppercase tracking-tight text-[11px] sm:text-xs">
             {formatHeaderDate(currentDate)}
+          </span>
+          <span className="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-[11px] font-medium hidden md:inline">
+            Perfil: <strong className="capitalize">{userRole}</strong>
           </span>
         </div>
 
@@ -165,12 +220,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           <button
             id="btn-quick-new-interaction"
             onClick={onNewInteraction}
-            className="bg-indigo-600 text-white px-3.5 sm:px-4 py-1.5 rounded-md text-xs font-bold hover:bg-indigo-700 transition-colors shadow-xs flex items-center gap-1.5"
+            className="bg-indigo-600 text-white px-3.5 sm:px-4 py-1.5 rounded-lg text-xs font-bold hover:bg-indigo-700 transition-colors shadow-xs flex items-center gap-1.5"
           >
-            <span>+ NOVO ATENDIMENTO</span>
+            <Plus className="w-3.5 h-3.5" />
+            <span>NOVO ATENDIMENTO</span>
           </button>
         </div>
       </div>
     </header>
   );
 };
+

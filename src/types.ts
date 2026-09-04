@@ -42,16 +42,38 @@ export interface CatalogItem {
   active: boolean;
 }
 
+export type UserRole = 'vendedora' | 'administrador';
+
+export interface ProductItem {
+  id: string;
+  name: string; // Nome comercial próprio, ex: "Sofá Imperial 3 Lugares"
+  category: string; // Categoria vinculada
+  brand?: string; // Fabricante ou Marca (opcional)
+  active: boolean; // Ativo / Inativo
+  notes?: string; // Observação
+}
+
+export interface CategoryItem {
+  id: string;
+  name: string;
+  active: boolean;
+}
+
 export interface AppSettings {
   storeName: string;
+  userRole?: UserRole;
+  activeSeller?: string;
+  adminPin?: string;
   origins: string[];
   campaigns: string[];
   products: string[];
   sellers: string[];
-  // Cadastros estruturados com suporte a Ativar/Desativar sem apagar histórico (Regra 21)
+  categories?: string[];
+  // Cadastros estruturados com suporte a Ativar/Desativar sem apagar histórico (Regra 8 e 21)
   catalogOrigins?: CatalogItem[];
   catalogCampaigns?: CatalogItem[];
-  catalogProducts?: CatalogItem[];
+  catalogProducts?: ProductItem[];
+  catalogCategories?: CategoryItem[];
   catalogSellers?: CatalogItem[];
   lastBackupDate?: string;
   autoBackupEnabled?: boolean;
